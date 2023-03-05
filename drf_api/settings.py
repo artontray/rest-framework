@@ -34,8 +34,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY = os.environ.get('SECRET_KEY')
 SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = 'DEV' in os.environ
+DEBUG = True
+# DEBUG = 'DEV' in os.environ
 ALLOWED_HOSTS = ['localhost', 'rest-framework-api.herokuapp.com']
 
 REST_FRAMEWORK = {
@@ -49,6 +49,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DATETIME_FORMAT': '%d %b %Y',
 }
+if 'DEV' not in os.environ:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
+        'rest_framework.renderers.JSONRenderer',
+    ]
 
 
 if 'DEV' in os.environ:
