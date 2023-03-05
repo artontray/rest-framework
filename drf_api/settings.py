@@ -106,7 +106,6 @@ INSTALLED_APPS = [
     'comment',
     'likes',
     'followers',
-    'dj_rest_auth.registration',
     'corsheaders',
 ]
 
