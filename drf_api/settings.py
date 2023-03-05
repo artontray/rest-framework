@@ -101,12 +101,13 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
+    'corsheaders',
     'posts',
     'profiles',
     'comment',
     'likes',
     'followers',
-    'corsheaders',
+
 ]
 
 SITE_ID = 1
@@ -123,7 +124,7 @@ MIDDLEWARE = [
 
 JWT_AUTH_COOKIE = 'my-app-auth'
 JWT_AUTH_REFRESH_COOKE = 'my-refresh-token'
-JWT_AUTH_SAMESITE = 'None'
+# JWT_AUTH_SAMESITE = 'None'
 
 
 if 'CLIENT_ORIGIN' in os.environ:
