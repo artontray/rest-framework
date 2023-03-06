@@ -35,7 +35,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY = os.environ.get('SECRET_KEY')
 SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = 'DEV' in os.environ
 # DEBUG = 'DEV' in os.environ
 # ALLOWED_HOSTS = ['localhost', 'rest-framework-api.herokuapp.com']
 
@@ -69,12 +70,19 @@ if 'DEV' not in os.environ:
 #         }
 #     }
 #else:
+#DATABASES = {
+#        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+#    }
+#print('connected')
+
 DATABASES = {
-        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
-    }
-print('connected')
-
-
+    'default': ({
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    } if 'DEV' in os.environ else dj_database_url.parse(
+        os.environ.get('DATABASE_URL')
+    ))
+}
 
 
 
@@ -119,6 +127,7 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -126,12 +135,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
-JWT_AUTH_COOKIE = 'my-app-auth'
-JWT_AUTH_REFRESH_COOKE = 'my-refresh-token'
-# JWT_AUTH_SAMESITE = 'None'
+
+
 
 
 #if 'CLIENT_ORIGIN' in os.environ:
@@ -142,7 +149,10 @@ JWT_AUTH_REFRESH_COOKE = 'my-refresh-token'
 #    CORS_ALLOWED_ORIGIN_REGEXES = [
 #        r"^https://.*\.gitpod\.io$",
 #     ]
-
+if 'CLIENT_ORIGIN' in os.environ:
+    CORS_ALLOWED_ORIGINS = [
+        os.environ.get('CLIENT_ORIGIN')
+    ]
 
 if 'CLIENT_ORIGIN_DEV' in os.environ:
     extracted_url = re.match(r'^.+-', os.environ.get('CLIENT_ORIGIN_DEV', ''), re.IGNORECASE).group(0)
